@@ -28,7 +28,7 @@ namespace Gs.Applicant.Test.SQLite.Manager
 
         #region View Interface
 
-        public DataTable CurrentTableRows
+        public DataSet CurrentDatabase
         {
             get;
             set;
@@ -85,14 +85,17 @@ namespace Gs.Applicant.Test.SQLite.Manager
             get;
             set;
         }
+        
 
         public void Reset()
         {
-            this.CurrentTableRows = new DataTable();
+            this.CurrentDatabase = new DataSet();
             this.SelectedTableName = string.Empty;
             this.SelectedRow = -1;
             this.NewTableColumns = new List<Column>();
             this.DBName = string.Empty;
+            this.tableList = new string[0];
+            cbTableList.Text = string.Empty;
         }
 
         #endregion
@@ -149,13 +152,12 @@ namespace Gs.Applicant.Test.SQLite.Manager
 
         private void BindCurrentTableRows()
         {
-            gvCreateTableColumns.DataSource = null;
-            gvCreateTableColumns.DataSource = NewTableColumns;
+            gvTableRows.DataSource = CurrentDatabase.Tables[SelectedTableName];
         }
 
         private void BindNewTableColumns()
         {
-            gvTableRows.DataSource = CurrentTableRows;
+            
             
         }
 
@@ -171,8 +173,25 @@ namespace Gs.Applicant.Test.SQLite.Manager
         }
 
 
+
         #endregion
 
-        
+        private void gvTableRows_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            presenter.UpdateRow(e.RowIndex);
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Reset();
+            BindTableList();
+            BindNewTableColumns();
+            BindCurrentTableRows();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }

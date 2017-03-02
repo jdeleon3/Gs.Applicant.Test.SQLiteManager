@@ -9,7 +9,7 @@ namespace Gs.Applicant.Test.SQLite.Manager.View
 {
     public interface ISQLiteManagerView
     {
-        DataTable CurrentTableRows { get; set; }
+        DataSet CurrentDatabase { get; set; }
         string DBConnectionString { get; }
         string DBName { get; set; }
         IList<Column> NewTableColumns { get; set; }

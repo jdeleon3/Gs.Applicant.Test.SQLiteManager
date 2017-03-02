@@ -98,14 +98,16 @@
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.closeToolStripMenuItem.Text = "&Close";
+            this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // tabControl1
             // 
@@ -156,12 +158,15 @@
             // 
             // gvTableRows
             // 
+            this.gvTableRows.AllowUserToAddRows = false;
+            this.gvTableRows.AllowUserToDeleteRows = false;
             this.gvTableRows.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gvTableRows.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gvTableRows.Location = new System.Drawing.Point(0, 0);
             this.gvTableRows.Name = "gvTableRows";
             this.gvTableRows.Size = new System.Drawing.Size(743, 357);
             this.gvTableRows.TabIndex = 0;
+            this.gvTableRows.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.gvTableRows_CellEndEdit);
             // 
             // panel1
             // 

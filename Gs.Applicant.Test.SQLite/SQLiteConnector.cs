@@ -161,7 +161,7 @@ namespace Gs.Applicant.Test.SQLite
 
         private string[] QueryForTableList()
         {
-            string sql = "SELECT NAME from sqlite_master;";
+            string sql = "SELECT NAME from sqlite_master WHERE NAME not like 'sqlite_%' and NAME not like 'IPK_%' and NAME not like 'IFK_%';";
             var cmd = new SQLiteCommand(sql, connection);
             var reader = cmd.ExecuteReader();
             List<string> tableNames = new List<string>();
@@ -175,7 +175,7 @@ namespace Gs.Applicant.Test.SQLite
         private DataTable QueryForAllRows()
         {
             //TODO:  Need to sanatize table name since it's publicly accessible
-            string sql = string.Format("SELECT *, rowid FROM {0}", CurrentTableName);
+            string sql = string.Format("SELECT * FROM {0}", CurrentTableName);
             var cmd = new SQLiteCommand(sql, connection);
             var reader = cmd.ExecuteReader();
             DataTable dt = new DataTable();
@@ -185,7 +185,7 @@ namespace Gs.Applicant.Test.SQLite
 
         private DataTable QueryForRow(int id)
         {
-            string sql = string.Format("SELECT *, rowid FROM {0} WHERE rowid = @id", CurrentTableName);
+            string sql = string.Format("SELECT * FROM {0} WHERE rowid = @id", CurrentTableName);
             var cmd = new SQLiteCommand(sql, connection);
             cmd.Parameters.AddWithValue("@id", id);
             var reader = cmd.ExecuteReader();
@@ -233,7 +233,7 @@ namespace Gs.Applicant.Test.SQLite
         private void QueryToUpdateRow(DataRow row)
         {
             StringBuilder sb = new StringBuilder();
-            SQLiteParameter[] parameters = new SQLiteParameter[row.ItemArray.Length];
+            SQLiteParameter[] parameters = new SQLiteParameter[row.ItemArray.Length+1];
             sb.AppendFormat("UPDATE {0} SET ", CurrentTableName);
             for (int i = 0; i < row.ItemArray.Length; ++i)
             {
@@ -244,7 +244,8 @@ namespace Gs.Applicant.Test.SQLite
                 sb.AppendFormat("{0} = @{1}", row.Table.Columns[i].ColumnName, i);
                 parameters[i] = new SQLiteParameter(string.Format("@{0}", i), row.ItemArray[i]);
             }
-            sb.Append(")");
+            sb.Append(" WHERE rowid = @id");
+            parameters[row.ItemArray.Length] = new SQLiteParameter("@id", row[GetIdColumnName(row.Table.TableName)]);
 
             string sql = sb.ToString();
             var cmd = new SQLiteCommand(sql, connection);
@@ -317,6 +318,10 @@ namespace Gs.Applicant.Test.SQLite
                 connection.Dispose();
                 connection = null;
             }
+        }
+        public static string GetIdColumnName(string table)
+        {
+            return string.Format("{0}Id", table);
         }
 
         void IDisposable.Dispose()
