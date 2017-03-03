@@ -51,7 +51,7 @@ namespace Gs.Applicant.Test.SQLite.Manager.Presenter
 
         public void UpdateRow(int i)
         {
-            model.UpdateRow(view.CurrentDatabase.Tables[view.SelectedTableName].Rows[i]);
+            model.UpdateRow(view.CurrentDatabase.Tables[view.SelectedTableName].DefaultView[i].Row);
         }
 
         public void SaveNewRow()
